@@ -5,7 +5,14 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 
-const sports = [
+// Definir la interfaz para el tipo Sport
+interface Sport {
+  name: string;
+  image: string;
+  description: string;
+}
+
+const sports: Sport[] = [
   { name: "Fútbol", image: "/futbol1.jpg", description: "El deporte rey, con las mejores ligas y competiciones." },
   { name: "Baloncesto", image: "/futbol3.jpg", description: "Sigue la NBA y las principales ligas europeas." },
   { name: "Tenis", image: "/futbol4.jpg", description: "Grand Slams, ATP y WTA tours en un solo lugar." },
@@ -13,7 +20,11 @@ const sports = [
 ]
 
 export default function SportsSection() {
-  const [selectedSport, setSelectedSport] = useState(null)
+  const [selectedSport, setSelectedSport] = useState<Sport | null>(null);
+
+  const handleSportClick = (sport: Sport) => {
+    setSelectedSport(sport);
+  };
 
   return (
     <section className="bg-[#0F172A] py-20">
@@ -33,7 +44,7 @@ export default function SportsSection() {
               className="bg-[#1E293B] rounded-lg overflow-hidden shadow-lg cursor-pointer"
               whileHover={{ scale: 1.05 }}
               layoutId={`sport-${index}`}
-              onClick={() => setSelectedSport(sport)}
+              onClick={() => handleSportClick(sport)}
             >
               <Image src={sport.image} width={300} height={200} alt={sport.name} className="w-full" />
               <div className="p-6">

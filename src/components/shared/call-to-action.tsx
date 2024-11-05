@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 // import { Button } from "@/components/ui/button"
 
 export default function CallToAction() {
@@ -45,7 +46,7 @@ export default function CallToAction() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Regístrate gratis
+            <Link href="../login">Iniciar Sesión</Link>
           </motion.button>
         </motion.div>
       </div>
