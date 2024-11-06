@@ -3,17 +3,24 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Facebook, Twitter, Linkedin, Github } from 'lucide-react'
 import Image from 'next/image'
+import { register } from '@/lib/api'
+import { toast } from 'sonner'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function SignUp() {
+  const router = useRouter()
+  const { login } = useAuth()
   const [formData, setFormData] = useState({
-    username: '',
+    name: '',
     email: '',
     password: '',
+    password_confirmation: '',
     agreeToTerms: false
   })
   const [isLoading, setIsLoading] = useState(false)
@@ -21,9 +28,24 @@ export default function SignUp() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    // Simular envío
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    setIsLoading(false)
+
+    if (formData.password !== formData.password_confirmation) {
+      toast.error('Las contraseñas no coinciden')
+      setIsLoading(false)
+      return
+    }
+
+    try {
+      const data = await register(formData.name, formData.email, formData.password, formData.password_confirmation)
+      login(data.user)
+      toast.success('Registro exitoso')
+      router.push('/')
+    } catch (error: any) {
+      console.error('Error during registration:', error)
+      toast.error(error.response?.data?.message || 'Error al registrarse. Por favor, inténtalo de nuevo.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,13 +92,13 @@ export default function SignUp() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-400">User Name</label>
+            <label className="text-sm font-medium text-gray-400">Name</label>
             <motion.div whileFocus={{ scale: 1.02 }}>
               <Input
                 type="text"
-                name="username"
-                placeholder="User Name"
-                value={formData.username}
+                name="name"
+                placeholder="Your name"
+                value={formData.name}
                 onChange={handleChange}
                 className="w-full px-3 py-2 bg-[#0F172A] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED] focus:border-transparent"
                 required
@@ -107,6 +129,21 @@ export default function SignUp() {
                 name="password"
                 placeholder="••••••••••••"
                 value={formData.password}
+                onChange={handleChange}
+                className="w-full px-3 py-2 bg-[#0F172A] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED] focus:border-transparent"
+                required
+              />
+            </motion.div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-400">Confirm Password</label>
+            <motion.div whileFocus={{ scale: 1.02 }}>
+              <Input
+                type="password"
+                name="password_confirmation"
+                placeholder="••••••••••••"
+                value={formData.password_confirmation}
                 onChange={handleChange}
                 className="w-full px-3 py-2 bg-[#0F172A] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED] focus:border-transparent"
                 required
@@ -168,7 +205,6 @@ export default function SignUp() {
             { icon: <Github size={20} />, href: "#" },
           ].map((social, index) => (
             <motion.a
-              
               key={index}
               href={social.href}
               className="p-2 bg-[#0F172A] text-gray-400 rounded-md hover:text-[#7C3AED] transition-colors"

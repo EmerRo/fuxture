@@ -45,8 +45,8 @@ export default function Header() {
                 {item}
               </Link>
             ))}
-            <Button variant="outline" className="text-white border-white hover:bg-white hover:text-[#0F172A] justify-start w-full">
-             <Link href="../login" className="hidden sm:inline">Iniciar sesión</Link>
+            <Button className="bg-[#f34739] text-white hover:bg-[#d63c30]">
+             <Link href="../login">Iniciar Sesion</Link>
             </Button>
             <Button className="bg-[#38BDF8] hover:bg-[#0EA5E9] text-[#0F172A] w-full">
              <Link href="../registro">Registrarse</Link>

@@ -3,13 +3,19 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Facebook, Twitter, Linkedin, Github } from 'lucide-react'
+import { login } from '@/lib/api'
+import { toast } from 'sonner'
 import Image from 'next/image'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function SignIn() {
+  const router = useRouter()
+  const { login: authLogin } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -17,9 +23,18 @@ export default function SignIn() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    // Simular envío
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    setIsLoading(false)
+
+    try {
+      const data = await login(email, password)
+      authLogin(data.user)
+      toast.success('Inicio de sesión exitoso')
+      router.push('/')
+    } catch (error: any) {
+      console.error('Error during login:', error)
+      toast.error(error.response?.data?.message || 'Error al iniciar sesión. Por favor, verifica tus credenciales.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -58,7 +73,7 @@ export default function SignIn() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-400">Username or email</label>
+            <label className="text-sm font-medium text-gray-400">Email</label>
             <motion.div whileFocus={{ scale: 1.02 }}>
               <Input
                 type="email"
