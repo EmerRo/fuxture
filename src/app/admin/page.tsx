@@ -8,33 +8,52 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Facebook, Twitter, Linkedin, Github } from 'lucide-react'
-import { toast, Toaster } from 'sonner'
+import { toast } from 'sonner'
 import Image from 'next/image'
+import { useAuth } from '@/contexts/AuthContext'
+import axios from 'axios'
+
+// Función para hacer la solicitud de inicio de sesión a la API de Laravel
+const login = async (email, password) => {
+  try {
+    const response = await axios.post('http://localhost:8000/api/login', {
+      email,
+      password,
+    });
+    return response.data; // Retorna la respuesta de la API
+  } catch (error) {
+    // Manejo de errores para obtener el mensaje adecuado
+    const message = error.response?.data?.message || 'Error al iniciar sesión. Por favor, verifica tus credenciales.';
+    throw new Error(message);
+  }
+}
 
 export default function SignIn() {
   const router = useRouter()
+  const { login: authLogin } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    // Verificación de credenciales
-    if (email === "admin@gmail.com" && password === "123") {
-      await toast.success('Bienvenido Admin!')  // Mostrar mensaje antes de redirigir
-      router.push('/login/panel')               // Redirigir después
-    } else {
-      toast.error('Credenciales incorrectas. Intenta nuevamente.')
+    try {
+      const data = await login(email, password)
+      authLogin(data.user)
+      toast.success('Inicio de sesión exitoso')
+      router.push('/')
+    } catch (error: any) {
+      console.error('Error durante el inicio de sesión:', error)
+      toast.error(error.message || 'Error al iniciar sesión. Por favor, verifica tus credenciales.')
+    } finally {
+      setIsLoading(false)
     }
-
-    setIsLoading(false)
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0F172A] p-4">
-      <Toaster /> {/* Muestra el contenedor para los mensajes */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -58,11 +77,11 @@ export default function SignIn() {
         </Link>
 
         <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold text-white">Sign in</h1>
+          <h1 className="text-3xl font-bold text-white">Iniciar sesión</h1>
           <p className="text-gray-400">
-            Don&apos;t have an account?{' '}
+            ¿No tienes una cuenta?{' '}
             <Link href="/registro" className="text-[#7C3AED] hover:underline">
-              Sign up
+              Regístrate
             </Link>
           </p>
         </div>
@@ -73,7 +92,7 @@ export default function SignIn() {
             <motion.div whileFocus={{ scale: 1.02 }}>
               <Input
                 type="email"
-                placeholder="Email address here"
+                placeholder="Introduce tu email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-3 py-2 bg-[#0F172A] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED] focus:border-transparent"
@@ -83,7 +102,7 @@ export default function SignIn() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-400">Password</label>
+            <label className="text-sm font-medium text-gray-400">Contraseña</label>
             <motion.div whileFocus={{ scale: 1.02 }}>
               <Input
                 type="password"
@@ -100,11 +119,11 @@ export default function SignIn() {
             <div className="flex items-center space-x-2">
               <Checkbox id="remember" className="border-gray-700 data-[state=checked]:bg-[#7C3AED]" />
               <label htmlFor="remember" className="text-sm text-gray-400">
-                Remember me
+                Recuérdame
               </label>
             </div>
             <Link href="/forgot-password" className="text-sm text-[#7C3AED] hover:underline">
-              Forgot your password?
+              ¿Olvidaste tu contraseña?
             </Link>
           </div>
 
@@ -117,7 +136,7 @@ export default function SignIn() {
               disabled={isLoading}
               className="w-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white py-2 rounded-md transition-colors"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
             </Button>
           </motion.div>
         </form>
@@ -127,12 +146,17 @@ export default function SignIn() {
             <div className="w-full border-t border-gray-700"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-[#1E293B] text-gray-400">Or continue with</span>
+            <span className="px-2 bg-[#1E293B] text-gray-400">O continúa con</span>
           </div>
         </div>
 
         <div className="flex justify-center space-x-4">
-          {[{ icon: <Facebook size={20} />, href: "#" }, { icon: <Twitter size={20} />, href: "#" }, { icon: <Linkedin size={20} />, href: "#" }, { icon: <Github size={20} />, href: "#" }].map((social, index) => (
+          {[
+            { icon: <Facebook size={20} />, href: "#" },
+            { icon: <Twitter size={20} />, href: "#" },
+            { icon: <Linkedin size={20} />, href: "#" },
+            { icon: <Github size={20} />, href: "#" },
+          ].map((social, index) => (
             <motion.a
               key={index}
               href={social.href}

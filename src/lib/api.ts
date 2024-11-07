@@ -7,32 +7,22 @@ const api = axios.create({
   },
 });
 
-export const login = async (email: string, password: string) => {
-  try {
-    const response = await api.post('/login', { email, password });
-    localStorage.setItem('token', response.data.token);
-    return response.data;
-  } catch (error) {
-    throw error;
+// Función para establecer el token en las cabeceras de la API
+export const setAuthToken = (token: string) => {
+  if (token) {
+    api.defaults.headers['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers['Authorization'];
   }
 };
 
-export const register = async (name: string, email: string, password: string, password_confirmation: string) => {
+// Función para obtener los datos del usuario autenticado
+export const getUser = async () => {
   try {
-    const response = await api.post('/register', { name, email, password, password_confirmation });
-    localStorage.setItem('token', response.data.token);
+    const response = await api.get('/user');
     return response.data;
   } catch (error) {
-    throw error;
-  }
-};
-
-export const logout = async () => {
-  try {
-    await api.post('/logout');
-    localStorage.removeItem('token');
-  } catch (error) {
-    throw error;
+    throw new Error('No se pudo obtener la información del usuario');
   }
 };
 

@@ -23,28 +23,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
-      setAuthToken(token)
+      setAuthToken(token) // Establece el token en las cabeceras de la API
       checkAuth()
     }
   }, [])
 
   const checkAuth = async () => {
     try {
-      const userData = await getUser()
+      const userData = await getUser() // Obtén los datos del usuario autenticado
       setUser(userData)
     } catch (error) {
-      console.error('Error checking auth:', error)
+      console.log(error,'Error checking auth:', error)
       setUser(null)
     }
   }
 
   const login = (userData: User) => {
     setUser(userData)
+    localStorage.setItem('token', 'some-generated-token') // Almacena el token en localStorage
+    setAuthToken('some-generated-token') // Establece el token en las cabeceras
   }
 
   const logout = () => {
     setUser(null)
-    setAuthToken('')
+    localStorage.removeItem('token') // Elimina el token del localStorage
+    setAuthToken('') // Limpia el token de las cabeceras
   }
 
   return (
