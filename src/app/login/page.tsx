@@ -58,11 +58,11 @@ export default function SignIn() {
         </Link>
 
         <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold text-white">Sign in</h1>
+          <h1 className="text-3xl font-bold text-white">Iniciar Sesion</h1>
           <p className="text-gray-400">
-            Don&apos;t have an account?{' '}
+            No tienes una cuenta?{' '}
             <Link href="/registro" className="text-[#7C3AED] hover:underline">
-              Sign up
+            registrarse
             </Link>
           </p>
         </div>
@@ -73,7 +73,7 @@ export default function SignIn() {
             <motion.div whileFocus={{ scale: 1.02 }}>
               <Input
                 type="email"
-                placeholder="Email address here"
+                placeholder="Correo Electronico"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-3 py-2 bg-[#0F172A] border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#7C3AED] focus:border-transparent"
@@ -100,11 +100,11 @@ export default function SignIn() {
             <div className="flex items-center space-x-2">
               <Checkbox id="remember" className="border-gray-700 data-[state=checked]:bg-[#7C3AED]" />
               <label htmlFor="remember" className="text-sm text-gray-400">
-                Remember me
+                recordarme
               </label>
             </div>
             <Link href="/forgot-password" className="text-sm text-[#7C3AED] hover:underline">
-              Forgot your password?
+              Olvidaste Tu contraseña?
             </Link>
           </div>
 
@@ -117,7 +117,7 @@ export default function SignIn() {
               disabled={isLoading}
               className="w-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white py-2 rounded-md transition-colors"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? 'Signing in...' : 'Iniciar Sesion'}
             </Button>
           </motion.div>
         </form>
@@ -127,7 +127,7 @@ export default function SignIn() {
             <div className="w-full border-t border-gray-700"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-[#1E293B] text-gray-400">Or continue with</span>
+            <span className="px-2 bg-[#1E293B] text-gray-400">Continuar con</span>
           </div>
         </div>
 
