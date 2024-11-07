@@ -44,9 +44,9 @@ export default function SignIn() {
       authLogin(data.user)
       toast.success('Inicio de sesión exitoso')
       router.push('/')
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error durante el inicio de sesión:', error)
-      toast.error(error.message || 'Error al iniciar sesión. Por favor, verifica tus credenciales.')
+      toast.error('Error al iniciar sesión. Por favor, verifica tus credenciales.')
     } finally {
       setIsLoading(false)
     }

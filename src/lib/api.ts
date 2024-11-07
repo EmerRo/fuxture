@@ -26,4 +26,14 @@ export const getUser = async () => {
   }
 };
 
+// Función para registrar un nuevo usuario
+export const register = async (userData: { name: string; email: string; password: string }) => {
+  
+    const response = await api.post('/register', userData);
+    return response.data; // Retorna la respuesta del backend, como el usuario registrado
+
+
+  
+};
+
 export default api;
