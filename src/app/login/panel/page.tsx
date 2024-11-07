@@ -154,7 +154,7 @@ export default function ColorfulDashboard() {
                   <CardContent>
                     <div className="text-2xl font-bold">1,234</div>
                     <p className="text-xs text-pink-100">+10% desde el mes pasado</p>
-                    <Progress value={75} className="mt-2" indicatorColor="bg-white" trackColor="bg-pink-700" />
+                    <Progress value={75} className="mt-2 bg-pink-700" />
                   </CardContent>
                 </Card>
                 <Card className="bg-gradient-to-br from-purple-500 to-indigo-500 text-white">
@@ -165,7 +165,7 @@ export default function ColorfulDashboard() {
                   <CardContent>
                     <div className="text-2xl font-bold">56</div>
                     <p className="text-xs text-indigo-100">+3 nuevos equipos esta semana</p>
-                    <Progress value={65} className="mt-2" indicatorColor="bg-white" trackColor="bg-indigo-700" />
+                    <Progress value={65} className="mt-2  bg-indigo-700" />
                   </CardContent>
                 </Card>
                 <Card className="bg-gradient-to-br from-green-500 to-teal-400 text-white">
@@ -176,7 +176,7 @@ export default function ColorfulDashboard() {
                   <CardContent>
                     <div className="text-2xl font-bold">12</div>
                     <p className="text-xs text-green-100">Próximo evento en 3 días</p>
-                    <Progress value={40} className="mt-2" indicatorColor="bg-white" trackColor="bg-green-700" />
+                    <Progress value={40} className="mt-2 bg-green-700" />
                   </CardContent>
                 </Card>
                 <Card className="bg-gradient-to-br from-yellow-400 to-orange-500 text-white">
@@ -187,7 +187,7 @@ export default function ColorfulDashboard() {
                   <CardContent>
                     <div className="text-2xl font-bold">$24,560</div>
                     <p className="text-xs text-yellow-100">+15% desde el último trimestre</p>
-                    <Progress value={80} className="mt-2" indicatorColor="bg-white" trackColor="bg-yellow-600" />
+                    <Progress value={80} className="mt-2 bg-yellow-600" />
                   </CardContent>
                 </Card>
               </div>
