@@ -22,18 +22,28 @@ export const getUser = async () => {
     const response = await api.get('/user');
     return response.data;
   } catch (error) {
-    throw new Error('No se pudo obtener la información del usuario');
+    // Específicamente, puedes capturar un error del tipo AxiosError para un manejo más detallado
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || 'Error al obtener los datos del usuario');
+    } else {
+      throw new Error('No se pudo obtener la información del usuario');
+    }
   }
 };
 
 // Función para registrar un nuevo usuario
 export const register = async (userData: { name: string; email: string; password: string }) => {
-  
+  try {
     const response = await api.post('/register', userData);
     return response.data; // Retorna la respuesta del backend, como el usuario registrado
-
-
-  
+  } catch (error) {
+    // Manejo del error, capturando AxiosError si se da
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || 'Error al registrar el usuario');
+    } else {
+      throw new Error('Error desconocido al registrar el usuario');
+    }
+  }
 };
 
 export default api;

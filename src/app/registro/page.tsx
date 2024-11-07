@@ -40,9 +40,9 @@ export default function SignUp() {
       login(data.user)
       toast.success('Registro exitoso')
       router.push('/')
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error during registration:', error)
-      toast.error(error.response?.data?.message || 'Error al registrarse. Por favor, inténtalo de nuevo.')
+      toast.error('Error al registrarse. Por favor, inténtalo de nuevo.')
     } finally {
       setIsLoading(false)
     }
