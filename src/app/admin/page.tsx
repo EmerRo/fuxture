@@ -14,25 +14,30 @@ import { useAuth } from '@/contexts/AuthContext'
 import axios from 'axios'
 
 // Función para hacer la solicitud de inicio de sesión a la API de Laravel
-const login = async (email, password) => {
-  try {
-    const response = await axios.post('http://localhost:8000/api/login', {
-      email,
-      password,
-    });
-    return response.data; // Retorna la respuesta de la API
-  } catch (error) {
-    // Manejo de errores para obtener el mensaje adecuado
-    const message = error.response?.data?.message || 'Error al iniciar sesión. Por favor, verifica tus credenciales.';
-    throw new Error(message);
+const login = async (email: string, password: string) => {
+    try {
+      const response = await axios.post('http://localhost:8000/api/login', {
+        email,
+        password,
+      });
+      return response.data; // Retorna la respuesta de la API
+    } catch (error: unknown) {
+      // Manejo de errores para obtener el mensaje adecuado
+      if (axios.isAxiosError(error) && error.response) {
+        const message = error.response.data?.message || 'Error al iniciar sesión. Por favor, verifica tus credenciales.';
+        throw new Error(message);
+      } else {
+        throw new Error('Error desconocido al iniciar sesión.');
+      }
+    }
   }
-}
+  
 
 export default function SignIn() {
   const router = useRouter()
   const { login: authLogin } = useAuth()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -151,7 +156,7 @@ export default function SignIn() {
         </div>
 
         <div className="flex justify-center space-x-4">
-          {[
+          {[ 
             { icon: <Facebook size={20} />, href: "#" },
             { icon: <Twitter size={20} />, href: "#" },
             { icon: <Linkedin size={20} />, href: "#" },
